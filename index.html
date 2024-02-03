@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chatbot</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-window"></div>
+        <input type="text" id="user-input" placeholder="Type your message here...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        function sendMessage() {
+            var userInput = document.getElementById('user-input').value;
+            document.getElementById('user-input').value = '';
+
+            if (userInput.trim() === '') return;
+
+            var chatWindow = document.getElementById('chat-window');
+            chatWindow.innerHTML += '<div>User: ' + userInput + '</div>';
+
+            processMessage(userInput);
+        }
+
+        function processMessage(message) {
+            if (message.toLowerCase().includes("sound mind")) {
+                getMentalHealthAdvice();
+            } else {
+                // Optionally, handle other types of messages here
+                displayResponse("I'm not sure how to respond to that.");
+            }
+        }
+        
+        function getMentalHealthAdvice() {
+            fetch('https://api.adviceslip.com/advice')
+                .then(response => response.json())
+                .then(data => displayResponse("Advice: " + data.slip.advice))
+                .catch(error => displayResponse("Error: Unable to fetch advice."));
+        }        
+           
+
+        function displayResponse(message) {
+            var chatWindow = document.getElementById('chat-window');
+            chatWindow.innerHTML += '<div>Chatbot: ' + message + '</div>';
+        }
+    </script>
+</body>
+</html>
